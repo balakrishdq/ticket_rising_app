@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1090506097153",
+    "project_id": "ticket-raising-app-814ec",
+    "storage_bucket": "ticket-raising-app-814ec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1090506097153:android:b8028ea19dcabebbf9b600",
+        "android_client_info": {
+          "package_name": "com.example.ticket_raising_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1090506097153-lkq0rjcedgi3k0576edleeemu1bbho0g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ticket_raising_app",
+            "certificate_hash": "2e9fa01f37600489777b8e5fc23303ee8ce972d3"
+          }
+        },
+        {
+          "client_id": "1090506097153-jg8mjc75is6gq01hhsm3pj9v5dgiq5i6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtiy0PyksGPtCH3r-x3BZwNB8atglS_ww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1090506097153-jg8mjc75is6gq01hhsm3pj9v5dgiq5i6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
