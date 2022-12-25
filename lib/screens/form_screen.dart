@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+
+import '../bloc/form/bloc/form_bloc.dart';
 
 class FormScreen extends StatefulWidget {
   const FormScreen({super.key});
@@ -11,7 +14,7 @@ class FormScreen extends StatefulWidget {
 }
 
 class _FormScreenState extends State<FormScreen> {
-  final CollectionReference collectionReference =
+  final CollectionReference _tickets =
       FirebaseFirestore.instance.collection('tickets');
 
   final TextEditingController _titleController = TextEditingController();
@@ -20,7 +23,7 @@ class _FormScreenState extends State<FormScreen> {
   final TextEditingController _dateController = TextEditingController();
 
   Future<void> _addTickets() async {
-    return collectionReference
+    return _tickets
         .add({
           'title': _titleController.text,
           'description': _descriptionController.text,
@@ -74,128 +77,148 @@ class _FormScreenState extends State<FormScreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: [
-              Container(
-                height: MediaQuery.of(context).size.height * 0.6,
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: Form(
-                  child: Column(
+      body: BlocBuilder<FormBloc, FormValidate>(
+        builder: (context, state) {
+          return SingleChildScrollView(
+            child: Container(
+              child: Column(
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Form(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          TextFormField(
+                            onChanged: (value) {
+                              context.read<FormBloc>().add(TitleChanged(value));
+                            },
+                            controller: _titleController,
+                            decoration: InputDecoration(
+                              label: Text(
+                                'Title of a Problem',
+                              ),
+                              labelStyle: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                          TextFormField(
+                            controller: _descriptionController,
+                            onChanged: (value) {
+                              context
+                                  .read<FormBloc>()
+                                  .add(DescriptionChanged(value));
+                            },
+                            decoration: InputDecoration(
+                              label: Text(
+                                'Description of a Problem',
+                              ),
+                              labelStyle: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                          TextFormField(
+                            controller: _locationController,
+                            onChanged: (value) {
+                              context
+                                  .read<FormBloc>()
+                                  .add(LocationChanged(value));
+                            },
+                            decoration: InputDecoration(
+                              label: Text(
+                                'Location',
+                              ),
+                              labelStyle: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                          TextFormField(
+                            readOnly: true,
+                            controller: _dateController,
+                            onChanged: (value) {
+                              context.read<FormBloc>().add(DateChanged(value));
+                            },
+                            onTap: getDate,
+                            decoration: InputDecoration(
+                              labelText: 'Tap to select Date',
+                              labelStyle: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Gap(20),
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      TextFormField(
-                        controller: _titleController,
-                        decoration: InputDecoration(
-                          label: Text(
-                            'Title of a Problem',
+                      Container(
+                        height: 50,
+                        width: 100,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.green,
                           ),
-                          labelStyle: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                      TextFormField(
-                        controller: _descriptionController,
-                        decoration: InputDecoration(
-                          label: Text(
-                            'Description of a Problem',
-                          ),
-                          labelStyle: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
+                          onPressed: () {
+                            _addTickets();
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            'Save',
+                            style: TextStyle(
+                              fontSize: 17,
+                            ),
                           ),
                         ),
                       ),
-                      TextFormField(
-                        controller: _locationController,
-                        decoration: InputDecoration(
-                          label: Text(
-                            'Location',
+                      Container(
+                        height: 50,
+                        width: 100,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.red,
                           ),
-                          labelStyle: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                      TextFormField(
-                        readOnly: true,
-                        controller: _dateController,
-                        onTap: getDate,
-                        decoration: InputDecoration(
-                          labelText: 'Tap to select Date',
-                          labelStyle: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            'Cancel',
                           ),
                         ),
                       ),
                     ],
-                  ),
-                ),
-              ),
-              Gap(20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                    height: 50,
-                    width: 100,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.green,
-                      ),
-                      onPressed: () {
-                        _addTickets();
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        'Save',
-                        style: TextStyle(
-                          fontSize: 17,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 50,
-                    width: 100,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.red,
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        'Cancel',
-                      ),
-                    ),
-                  ),
+                  )
                 ],
-              )
-            ],
-          ),
-        ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

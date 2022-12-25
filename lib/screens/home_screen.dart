@@ -1,6 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ticket_raising_app/screens/form_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/database/bloc/database_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,8 +11,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final CollectionReference _tickets =
-      FirebaseFirestore.instance.collection('tickets');
+  // final CollectionReference _tickets =
+  //     FirebaseFirestore.instance.collection('tickets');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,24 +35,26 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: StreamBuilder(
-        stream: _tickets.snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-          if (streamSnapshot.hasData) {
-            return ListView.builder(
-              itemCount: streamSnapshot.data!.docs.length,
+      body: BlocBuilder<DatabaseBloc, DatabaseState>(
+        builder: (context, state) {
+          if (state is DatabaseInitial) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (state is DatabaseSuccess) {
+            ListView.builder(
+              itemCount: state.listofTickets.length,
               itemBuilder: (context, index) {
-                final DocumentSnapshot documentSnapshot =
-                    streamSnapshot.data!.docs[index];
                 return Card(
                   child: ListTile(
-                    title: Text(documentSnapshot['title']),
-                    subtitle: Text(documentSnapshot['description']),
+                    title: Text(state.listofTickets[index].title),
+                    subtitle: Text(state.listofTickets[index].description),
                     trailing: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text(documentSnapshot['location']),
-                        Text(documentSnapshot['date']),
+                        Text(state.listofTickets[index].location),
+                        Text(state.listofTickets[index].date),
                       ],
                     ),
                   ),
@@ -59,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             );
           }
-          return const Center(
+          return Center(
             child: CircularProgressIndicator(),
           );
         },
@@ -67,3 +70,37 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+
+
+
+// return StreamBuilder(
+//             stream: _tickets.snapshots(),
+//             builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+//               if (streamSnapshot.hasData) {
+//                 return ListView.builder(
+//                   itemCount: streamSnapshot.data!.docs.length,
+//                   itemBuilder: (context, index) {
+//                     final DocumentSnapshot documentSnapshot =
+//                         streamSnapshot.data!.docs[index];
+//                     return Card(
+//                       child: ListTile(
+//                         title: Text(documentSnapshot['title']),
+//                         subtitle: Text(documentSnapshot['description']),
+//                         trailing: Column(
+//                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                           children: [
+//                             Text(documentSnapshot['location']),
+//                             Text(documentSnapshot['date']),
+//                           ],
+//                         ),
+//                       ),
+//                     );
+//                   },
+//                 );
+//               }
+//               return const Center(
+//                 child: CircularProgressIndicator(),
+//               );
+//             },
+//           );
