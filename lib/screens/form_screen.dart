@@ -1,4 +1,4 @@
-import 'package:firebase_database/firebase_database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
@@ -11,18 +11,26 @@ class FormScreen extends StatefulWidget {
 }
 
 class _FormScreenState extends State<FormScreen> {
+  final CollectionReference collectionReference =
+      FirebaseFirestore.instance.collection('tickets');
+
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
 
-  late DatabaseReference dbReference;
-
-  @override
-  void initState() {
-    dbReference = FirebaseDatabase.instance.ref().child('Tickets');
-    _dateController.text = '';
-    super.initState();
+  Future<void> _addTickets() async {
+    return collectionReference
+        .add({
+          'title': _titleController.text,
+          'description': _descriptionController.text,
+          'location': _locationController.text,
+          'date': _dateController.text,
+        })
+        .then((value) => print('ticket added'))
+        .catchError(
+          (error) => print('Failed to add ticket: $error'),
+        );
   }
 
   getDate() async {
@@ -157,14 +165,7 @@ class _FormScreenState extends State<FormScreen> {
                         primary: Colors.green,
                       ),
                       onPressed: () {
-                        Map<String, String> ticketDetails = {
-                          'title': _titleController.text,
-                          'description': _descriptionController.text,
-                          'location': _locationController.text,
-                          'date': _dateController.text,
-                        };
-
-                        dbReference.push().set(ticketDetails);
+                        _addTickets();
                         Navigator.of(context).pop();
                       },
                       child: Text(
@@ -199,32 +200,3 @@ class _FormScreenState extends State<FormScreen> {
     );
   }
 }
-
-// ElevatedButton(
-//     onPressed: () async {
-//       result = await FilePicker.platform.pickFiles(
-//         allowMultiple: false,
-//       );
-//       if (result != null &&
-//           result!.files.single.path != null) {
-//         PlatformFile file = result!.files.first;
-//         print(file.name);
-//         print(file.bytes);
-//         print(file.size);
-//         print(file.extension);
-//         print(file.path);
-//         File _file = File(result!.files.single.path!);
-//         setState(() {
-//           fileText = _file.path.split('/').last;
-//         });
-//       } else {}
-//     },
-//     child: Row(
-//       mainAxisAlignment: MainAxisAlignment.center,
-//       children: [
-//         Icon(
-//           Icons.attach_file,
-//         ),
-//         Text('Attach File')
-//       ],
-//     ))
