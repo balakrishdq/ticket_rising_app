@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'form_bloc.dart';
 
 abstract class FormEvent extends Equatable {
@@ -38,6 +39,19 @@ class DateChanged extends FormEvent {
   final String date;
 
   DateChanged(this.date);
+
+  @override
+  List<Object> get props => [];
+}
+
+class SaveTicket extends FormEvent {
+  const SaveTicket();
+  @override
+  List<Object> get props => [];
+}
+
+class SubmitTicket extends FormEvent {
+  const SubmitTicket();
 
   @override
   List<Object> get props => [];

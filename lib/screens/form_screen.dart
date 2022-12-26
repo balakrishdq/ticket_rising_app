@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -14,27 +13,27 @@ class FormScreen extends StatefulWidget {
 }
 
 class _FormScreenState extends State<FormScreen> {
-  final CollectionReference _tickets =
-      FirebaseFirestore.instance.collection('tickets');
+  // final CollectionReference _tickets =
+  //     FirebaseFirestore.instance.collection('tickets');
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
 
-  Future<void> _addTickets() async {
-    return _tickets
-        .add({
-          'title': _titleController.text,
-          'description': _descriptionController.text,
-          'location': _locationController.text,
-          'date': _dateController.text,
-        })
-        .then((value) => print('ticket added'))
-        .catchError(
-          (error) => print('Failed to add ticket: $error'),
-        );
-  }
+  // Future<void> _addTickets() async {
+  //   return _tickets
+  //       .add({
+  //         'title': _titleController.text,
+  //         'description': _descriptionController.text,
+  //         'location': _locationController.text,
+  //         'date': _dateController.text,
+  //       })
+  //       .then((value) => print('ticket added'))
+  //       .catchError(
+  //         (error) => print('Failed to add ticket: $error'),
+  //       );
+  // }
 
   getDate() async {
     DateTime? pickedDate = await showDatePicker(
@@ -185,10 +184,8 @@ class _FormScreenState extends State<FormScreen> {
                           style: ElevatedButton.styleFrom(
                             primary: Colors.green,
                           ),
-                          onPressed: () {
-                            _addTickets();
-                            Navigator.of(context).pop();
-                          },
+                          onPressed: () =>
+                              context.read<FormBloc>().add(SaveTicket()),
                           child: Text(
                             'Save',
                             style: TextStyle(

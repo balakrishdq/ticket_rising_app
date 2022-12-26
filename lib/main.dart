@@ -1,5 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ticket_raising_app/bloc/database/bloc/database_bloc.dart';
+import 'package:ticket_raising_app/bloc/form/bloc/form_bloc.dart';
+import 'package:ticket_raising_app/repository/database_repository.dart';
 import 'package:ticket_raising_app/screens/home_screen.dart';
 
 void main() async {
@@ -14,12 +18,26 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.amber,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => FormBloc(
+            DatabaseRepositoryImpl(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => DatabaseBloc(
+            DatabaseRepositoryImpl(),
+          ),
+        )
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.amber,
+        ),
+        home: const HomeScreen(),
       ),
-      home: const HomeScreen(),
     );
   }
 }
