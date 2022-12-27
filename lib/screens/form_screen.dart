@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import 'package:ticket_raising_app/bloc/database/bloc/database_bloc.dart';
+import 'package:ticket_raising_app/model/ticket.dart';
 
 import '../bloc/form/bloc/form_bloc.dart';
 
@@ -184,8 +186,11 @@ class _FormScreenState extends State<FormScreen> {
                           style: ElevatedButton.styleFrom(
                             primary: Colors.green,
                           ),
-                          onPressed: () =>
-                              context.read<FormBloc>().add(SaveTicket()),
+                          onPressed: () => {
+                            context.read<FormBloc>().add(SaveTicket()),
+                            context.read<DatabaseBloc>().add(DatabaseFetched()),
+                            Navigator.pop(context)
+                          },
                           child: Text(
                             'Save',
                             style: TextStyle(

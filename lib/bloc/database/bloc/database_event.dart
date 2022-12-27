@@ -9,5 +9,5 @@ abstract class DatabaseEvent extends Equatable {
 
 class DatabaseFetched extends DatabaseEvent {
   @override
-  List<Object> get props => [];
+  List<Ticket> get props => [];
 }

@@ -6,8 +6,8 @@ class DatabaseRepositoryImpl implements DatabaseRepository {
   DatabaseService service = DatabaseService();
 
   @override
-  Future<void> SaveTicketData(Ticket ticketData) {
-    return service.addTicket(ticketData);
+  Future<void> SaveTicketData(Ticket ticket) {
+    return service.addTicket(ticket);
   }
 
   @override
@@ -17,6 +17,6 @@ class DatabaseRepositoryImpl implements DatabaseRepository {
 }
 
 abstract class DatabaseRepository {
-  Future<void> SaveTicketData(Ticket ticketData);
+  Future<void> SaveTicketData(Ticket ticket);
   Future<List<Ticket>> retrieveTicket();
 }

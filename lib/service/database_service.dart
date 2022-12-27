@@ -8,7 +8,11 @@ class DatabaseService {
     await _db
         .collection('tickets')
         .doc(ticketData.title)
-        .set(ticketData.toMap());
+        .set(
+          ticketData.toMap(),
+        )
+        .then((value) => print('Ticket Added'))
+        .catchError((error) => print("Failed to add ticket $error"));
   }
 
   Future<List<Ticket>> retrieveTickets() async {

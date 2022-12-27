@@ -12,7 +12,9 @@ class DatabaseInitial extends DatabaseState {}
 class DatabaseSuccess extends DatabaseState {
   final List<Ticket> listofTickets;
 
-  DatabaseSuccess(this.listofTickets);
+  DatabaseSuccess(
+    this.listofTickets,
+  );
 
   @override
   List<Object> get props => [listofTickets];
